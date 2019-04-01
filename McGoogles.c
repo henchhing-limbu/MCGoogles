@@ -67,6 +67,7 @@ Order *GetOrder(McGoogles* mcg) {
 }
 
 // Optional helper functions (you can implement if you think they would be useful)
+// TODO: don't know if this implementation is right
 bool IsEmpty(McGoogles* mcg) {
     if (mcg->orders_handled == mcg->expected_num_orders)
         return true;

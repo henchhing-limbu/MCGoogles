@@ -54,5 +54,22 @@ int main() {
     pthread_t cooks[NUM_COOKS];
     mcg = OpenRestaurant(MCGOOGLES_SIZE, EXPECTED_NUM_ORDERS);
     
+    // Create customers and cooks threads
+    for (int i = 0; i < NUM_CUSTOMERS; i++) {
+        pthread_create(&customers[i], NULL, McGooglesCustomer, NULL);
+    }
+    for (int i = 0; i < NUM_COOKS; i++) {
+        pthread_create(&cooks[i], NULL, McGooglesCook, NULL);
+    }
+    
+    // Wait for all customers and cooks threads
+    for (int i = 0; i < NUM_CUSTOMERS; i++) {
+        pthread_join(customers[i], NULL);
+    }
+    for (int i = 0; i <NUM_COOKS; i++) {
+        pthread_join(cooks[i], NULL);
+    }
+    
+    
     return 0;
 }
