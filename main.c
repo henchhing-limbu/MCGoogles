@@ -50,5 +50,9 @@ void* McGooglesCook(void* tid) {
  *  - close the restaurant.
  */
 int main() {
+    pthread_t customers[NUM_CUSTOMERS];
+    pthread_t cooks[NUM_COOKS];
+    mcg = OpenRestaurant(MCGOOGLES_SIZE, EXPECTED_NUM_ORDERS);
+    
     return 0;
 }
