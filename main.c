@@ -23,7 +23,18 @@ McGoogles *mcg;
  *  - add their order to the restaurant.
  */
 void* McGooglesCustomer(void* tid) {
-    int customer_id = (int)(long) tid;
+    // int customer_id = (int)(long) tid;
+    int customer_id = *(int *) tid;
+    
+    for (int i = 0; i < ORDERS_PER_CUSTOMER; i++) {
+        Order* order = malloc(sizeof(Order));
+        order->menu_item = PickRandomMenuItem();
+        order->customer_id = customer_id;
+        order->next = NULL;
+          
+        AddOrder(mcg, order);
+        printf("Added order number %d\n", mcg->current_size);
+    }
 	return NULL;
 }
 
@@ -36,8 +47,16 @@ void* McGooglesCustomer(void* tid) {
  * receive an order.
  */
 void* McGooglesCook(void* tid) {
-    int cook_id = (int)(long) tid;
+    int cook_id = *(int *) tid;
 	int orders_fulfilled = 0;
+    while (!IsEmpty(mcg)) {
+        Order* order = GetOrder(mcg);
+        // valid order
+        if (order) {
+            // free the space taken by order
+            free(order);
+        }
+    }
 	printf("Cook #%d fulfilled %d orders\n", cook_id, orders_fulfilled);
 	return NULL;
 }
@@ -52,16 +71,18 @@ void* McGooglesCook(void* tid) {
 int main() {
     pthread_t customers[NUM_CUSTOMERS];
     pthread_t cooks[NUM_COOKS];
-    mcg = OpenRestaurant(MCGOOGLES_SIZE, EXPECTED_NUM_ORDERS);
     
+    mcg = OpenRestaurant(NUM_COOKS, EXPECTED_NUM_ORDERS);
+
     // Create customers and cooks threads
     for (int i = 0; i < NUM_CUSTOMERS; i++) {
-        pthread_create(&customers[i], NULL, McGooglesCustomer, NULL);
+        pthread_create(&customers[i], NULL, McGooglesCustomer(&i), NULL);
     }
     for (int i = 0; i < NUM_COOKS; i++) {
-        pthread_create(&cooks[i], NULL, McGooglesCook, NULL);
+        printf("Entered cook threads\n");
+        pthread_create(&cooks[i], NULL, McGooglesCook(&i), NULL);
     }
-    
+        
     // Wait for all customers and cooks threads
     for (int i = 0; i < NUM_CUSTOMERS; i++) {
         pthread_join(customers[i], NULL);
@@ -70,6 +91,6 @@ int main() {
         pthread_join(cooks[i], NULL);
     }
     
-    
+    CloseRestaurant(mcg);
     return 0;
 }

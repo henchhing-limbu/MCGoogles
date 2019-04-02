@@ -86,4 +86,18 @@ int AddOrder(McGoogles* mcg, Order* order);
  */
 Order *GetOrder(McGoogles* mcg);
 
+/**
+ * Checks if the orders restaurant can take is full
+ */
+bool IsFull(McGoogles* mcg);
+
+/**
+ * Checks if the restaurant order is empty
+ */
+bool IsEmpty(McGoogles* mcg);
+/**
+ * Add an order to the back of orders queue
+ */
+void AddOrderToBack(Order **orders, Order *order);
+
 #endif  // LAB3_MCGOOGLES_H_

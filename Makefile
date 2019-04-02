@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I. -pthread -std=c99
+CFLAGS=-I. -pthread -std=c99 -g
 DEPS = McGoogles.h
 OBJ = McGoogles.o main.o 
 
@@ -8,3 +8,7 @@ OBJ = McGoogles.o main.o
 
 main: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
+
+.PHONY: clean
+clean:
+	rm *.o main
