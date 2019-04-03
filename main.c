@@ -33,7 +33,8 @@ void* McGooglesCustomer(void* tid) {
         order->next = NULL;
           
         AddOrder(mcg, order);
-        printf("Added order number %d\n", mcg->current_size);
+        printf("Added order %d\n", order->order_number);
+        printf("After adding %d\n#########\n", mcg->current_size);
     }
 	return NULL;
 }
@@ -49,11 +50,13 @@ void* McGooglesCustomer(void* tid) {
 void* McGooglesCook(void* tid) {
     int cook_id = *(int *) tid;
 	int orders_fulfilled = 0;
-    while (!IsEmpty(mcg)) {
-        Order* order = GetOrder(mcg);
-        // valid order
-        if (order) {
-            // free the space taken by order
+    // loop until all orders are not fulfilled 
+    while (mcg->orders_handled < mcg->expected_num_orders) {
+        // loop until order list is not empty
+        if (!IsEmpty(mcg)) {
+            Order* order = GetOrder(mcg);
+            printf("Cook id is %d\n", cook_id);
+            // TODO: check validitiy of the order
             free(order);
         }
     }
@@ -76,11 +79,10 @@ int main() {
 
     // Create customers and cooks threads
     for (int i = 0; i < NUM_CUSTOMERS; i++) {
-        pthread_create(&customers[i], NULL, McGooglesCustomer(&i), NULL);
+        pthread_create(&customers[i], NULL, McGooglesCustomer, &i);
     }
     for (int i = 0; i < NUM_COOKS; i++) {
-        printf("Entered cook threads\n");
-        pthread_create(&cooks[i], NULL, McGooglesCook(&i), NULL);
+        pthread_create(&cooks[i], NULL, McGooglesCook, &i);
     }
         
     // Wait for all customers and cooks threads

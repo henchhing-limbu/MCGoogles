@@ -1,4 +1,4 @@
-#ifndef LAB3_MCGOOGLES_H_
+z#ifndef LAB3_MCGOOGLES_H_
 #define LAB3_MCGOOGLES_H_
 
 #include <stdio.h>
